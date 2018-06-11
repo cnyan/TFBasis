@@ -51,7 +51,7 @@ print(product)
 # 定义一个会话
 #  启动默认图.
 sess = tf.Session()
-# 运算乘法，得到一个结果
+# 运算乘法，得到一个结果 
 result = sess.run(product)
 print('打印会话结果')
 print(result)
