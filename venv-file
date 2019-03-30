@@ -1,0 +1,15 @@
+在你的pycharm下的Terminal下输入(生成配置文件)
+pip freeze > requirments.txt
+
+安装配置文件
+pip install -r requirement.txt
+
+1. numpy
+2. pandas
+==========================
+tfPython:
+1. tensorflow
+
+==========================
+Logistic:
+1. scikit-learn

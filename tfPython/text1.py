@@ -8,7 +8,7 @@
 @time: 2018/6/11 10:13
 """
 
-'''
+'''                 
 使用 TensorFlow, 你必须明白 TensorFlow:
 
     使用图 (graph) 来表示计算任务.图中的节点被称之为 op (operation 的缩写).  
