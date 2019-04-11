@@ -8,7 +8,7 @@
 @time: 2019/4/2 15:09
 Describe：
     实现一个简易的网络模型，实现了通过集合计算一个 4 层全连接神经网络带L2正则化损失函数的功能
-    
+    作为深度学习模板
 """
 import tensorflow as tf
 import numpy as np
@@ -39,10 +39,10 @@ label = np.hstack(label).reshape(-1, 1)
 
 
 # 定义完成前向传播的隐含层
-def hidden_layer(input_tensor, weight1, bias1, weight2, bias2, weight3, bias3):
-    layer1 = tf.nn.relu(tf.matmul(input_tensor, weight1) + bias1)
-    layer2 = tf.nn.relu(tf.matmul(layer1, weight2) + bias2)
-    layer3 = tf.nn.relu(tf.matmul(layer2, weight3) + bias3)
+def hidden_layer(input_tensor, weights1, bias1, weights2, bias2, weights3, bias3):
+    layer1 = tf.nn.relu(tf.matmul(input_tensor, weights1) + bias1)
+    layer2 = tf.nn.relu(tf.matmul(layer1, weights2) + bias2)
+    layer3 = tf.nn.relu(tf.matmul(layer2, weights3) + bias3)
     return layer3
 
 
@@ -50,37 +50,45 @@ x = tf.placeholder(tf.float32, shape=(None, 2), name="x-input")
 y_ = tf.placeholder(tf.float32, shape=(None, 1), name='y-output')  # 衡量值
 
 # 定义权重参数和偏置参数
-weight1 = tf.Variable(tf.truncated_normal([2, 10], stddev=0.1))
+weights1 = tf.Variable(tf.truncated_normal([2, 10], stddev=0.1))
 bias1 = tf.Variable(tf.constant(0.1, shape=[10]))
-weight2 = tf.Variable(tf.truncated_normal([10, 10], stddev=0.1))
+weights2 = tf.Variable(tf.truncated_normal([10, 10], stddev=0.1))
 bias2 = tf.Variable(tf.constant(0.1, shape=[10]))
-weight3 = tf.Variable(tf.truncated_normal([10, 1], stddev=0.1))
+weights3 = tf.Variable(tf.truncated_normal([10, 1], stddev=0.1))
 bias3 = tf.Variable(tf.constant(0.1, shape=[1]))
 
 # data数组长度
 sample_size = len(data)
 # 得到隐藏层前向传播结果
-y = hidden_layer(x, weight1, bias1, weight2, bias2, weight3, bias3)  # 实际值
+y = hidden_layer(x, weights1, bias1, weights2, bias2, weights3, bias3)  # 实际值
+
 # 自定义损失函数
 error_loss = tf.reduce_sum(tf.pow(y_ - y, 2)) / sample_size
 tf.add_to_collection('losses', error_loss)  # 加入集合操作
 
 # 在权重上实现L2正则化,正则化作用于损失函数
 regularizer = tf.contrib.layers.l2_regularizer(0.01)
-regularization = regularizer(weight1) + regularizer(weight2) + regularizer(weight3)
+regularization = regularizer(weights1) + regularizer(weights2) + regularizer(weights3)
 tf.add_to_collection("losses", regularization)  # 加入集合操作
 
+# ###  优化对象就是损失函数加上正则化项即  loss = J(w) + λR（w)
 # 获取所有损失值，并在add_n()函数中进行加和运算
 loss = tf.add_n(tf.get_collection('losses'))
 
+training_step = tf.Variable(0)
+# 指数衰减的学习率：设定初始学习率0.8，因为指定了staircase=True，所以每训练100次，学习率乘以0.9
+decay_learning_rate = tf.train.exponential_decay(learning_rate=0.8, global_step=training_step, decay_steps=100,
+                                                 decay_rate=0.9, staircase=True)
+
 # 定义一个优化器，优化损失函数的最终取值
-train_op = tf.train.AdamOptimizer(0.01).minimize(loss)
+# train_op = tf.train.AdamOptimizer(0.01).minimize(loss)
+train_op = tf.train.AdamOptimizer(decay_learning_rate).minimize(loss)
 
 init_op = tf.global_variables_initializer()
 with tf.Session() as sess:
     sess.run(init_op)
-#    print(weight1)
-#    print(weight1.eval())
+    #    print(weight1)
+    #    print(weight1.eval())
     # 在for循环中进行30000轮训练
     for i in range(training_steps):
         sess.run(train_op, feed_dict={x: data, y_: label})
@@ -89,5 +97,3 @@ with tf.Session() as sess:
         if i % 2000 == 0:
             loss_value = sess.run(loss, feed_dict={x: data, y_: label})
             print("after %d steps,mse_loss:%f" % (i, loss_value))
-
-

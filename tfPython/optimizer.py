@@ -10,6 +10,7 @@ Describe：
     优化器:使用优化算法去优化损失函数可以逐渐减少训练误差
         优化器的学习率需要独立设置
         调用minimize()函数来指定最小化的损失函数
+        使用正则化解决过拟合的问题
 """
 import os
 import tensorflow as tf
