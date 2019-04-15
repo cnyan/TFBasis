@@ -7,11 +7,14 @@
 @license: Apache Licence 
 @time: 2019/4/11 15:02
 Describe：
-    
+    训练mnist数据集
     
 """
 import tensorflow.examples.tutorials.mnist.input_data as input_data
 import tensorflow as tf
+import os
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 '''获取数据'''
 mnist = input_data.read_data_sets("download", one_hot=True)
@@ -35,7 +38,7 @@ def hidden_layer(input_tensor, weights1, bias1, weights2, bias2, layer_name):
 x = tf.placeholder(tf.float32, [None, 784], name='x-input')  # 输入数据
 y_ = tf.placeholder(tf.float32, [None, 10], name='y-output')  # 标签
 
-# 生成隐藏层参数，隐藏层有500个神经单元，其中weights包含784*500=392000个参数
+# 生成隐藏层参数，隐藏层有784个神经单元，其中weights包含784*500=392000个参数
 weights1 = tf.Variable(tf.truncated_normal([784, 500], stddev=0.1))
 bias1 = tf.Variable(tf.constant(0.1, shape=[500]))
 # 生成输出层参数，输出层10个神经元，weights2包含500*10 = 5000个参数
@@ -77,7 +80,7 @@ train_op_step = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).m
                                                                                         global_step=training_step)
 
 '''
-    在训练这个模型时，没过一遍数据，既要通过反向传播来更新神经网络中的参数，又需要更新每一个参数的滑动平均值
+    在训练这个模型时，每过一遍数据，既要通过反向传播来更新神经网络中的参数，又需要更新每一个参数的滑动平均值
     control_dependencies()用于完成这样的一次性的多次操作
     # 下面两行代码，可以用一行代码替换
     # train_op = tf.group(train_op_step,averages_op)
@@ -85,7 +88,7 @@ train_op_step = tf.train.GradientDescentOptimizer(learning_rate=learning_rate).m
 with tf.control_dependencies([train_op_step, averages_op]):
     train_op = tf.no_op(name='train')  # 什么都不做，仅做为点位符使用控制边界。
 
-'''检查使用了滑动平均值模型的神经网络前向传播是否正确，平均值就是模型在这一组数据上的正确率'''
+'''检查使用了滑动平均值模型的神经网络前向传播是否正确，平均值就是模型在这一组数据上的正确率，求准确率'''
 crorent_prediction = tf.equal(tf.argmax(average_y, axis=1), tf.argmax(y_, axis=1))
 accuracy = tf.reduce_mean(tf.cast(crorent_prediction, tf.float32))  # tf.cast()这里将布尔类型变为float32类型的数据
 
@@ -100,8 +103,8 @@ with tf.Session() as sess:
     test_feed = {x: mnist.test.images, y_: mnist.test.labels}
 
     for i in range(max_steps):
+        # 每训练1000次计算滑动模型在验证数据集上的结果
         if i % 1000 == 0:
-            # 计算滑动模型在验证数据集上的结果
             validate_accuracy = sess.run(accuracy, feed_dict=validate_feed)
             print('After % d training step(s),validation accuracy using average model is %g%%' % (
                 i, validate_accuracy * 100))
