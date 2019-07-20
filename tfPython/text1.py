@@ -65,8 +65,8 @@ with tf.Session() as sees:
 print('======Variable========' * 4)
 '''
     变量： 通过 变量 (Variable) 维护状态.
-        Variables for more details. 变量维护图执行过程中的状态信息. 下
-         面的例子演示了如何使用变量实现一个简单的计数器.
+        Variables for more details. 变量维护图执行过程中的状态信息. 
+        下面的例子演示了如何使用变量实现一个简单的计数器.
 '''
 # 创建一个变量, 初始化为标量 0.
 state = tf.Variable(0, name='counter')

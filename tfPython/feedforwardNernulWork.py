@@ -43,7 +43,7 @@ with tf.Session() as sess:
     print(sess.run(y))
     print(sess.run(yy))
     print(sess.run(cross_entropy))
-    print('====== where() 及 greater()=======')
+    print('====== where() 及 greater() =======')
     print(sess.run(tf.greater(q1, q2)))
     print(tf.where(tf.greater(q1, q2), q1, q2).eval())
     print('=========end==============')

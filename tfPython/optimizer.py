@@ -36,3 +36,4 @@ with tf.Session() as sess:
     sess.run(init_op)
     print(sess.run(regularizer_l1(weight)))
     print(sess.run(regularizer_l2(weight)))
+

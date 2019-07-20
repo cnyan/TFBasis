@@ -18,6 +18,7 @@ if __name__ == '__main__':
     # 查看数据维度
     print('Training data and label size:')
     print(mnist.train.images.shape, mnist.train.labels.shape)
+    print(mnist.train.images.shape, mnist.train.labels.shape)
 
     print('Testing data and label size:')
     print(mnist.test.images.shape, mnist.test.labels.shape)
@@ -27,3 +28,5 @@ if __name__ == '__main__':
 
     print('Example training data:{}'.format(mnist.train.images[0]))
     print('Example training label:{}'.format(mnist.train.labels[0]))
+
+

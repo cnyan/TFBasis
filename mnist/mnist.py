@@ -9,6 +9,13 @@
 """
 
 '''
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1'  显示所有信息
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  显示错误和警告信息
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  显示错误信息
+'''
+
+
+'''
     手写数字识别 (MNIST)
     train-images-idx3-ubyte.gz:训练集图片 - 55000 张 训练图片, 5000 张 验证图片
     train-labels-idx1-ubyte.gz:训练集图片对应的数字标签

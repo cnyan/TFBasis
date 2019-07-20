@@ -77,6 +77,7 @@ loss = tf.add_n(tf.get_collection('losses'))
 
 training_step = tf.Variable(0)
 # 指数衰减的学习率：设定初始学习率0.8，因为指定了staircase=True，所以每训练100次，学习率乘以0.9
+# learning_rate 初始学习率，global_step 当前训练的次数，decay_steps 衰减速度，decay_rate 衰减系数
 decay_learning_rate = tf.train.exponential_decay(learning_rate=0.8, global_step=training_step, decay_steps=100,
                                                  decay_rate=0.9, staircase=True)
 
