@@ -13,7 +13,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 import tensorflow as tf
-from actionRecognition.mlp import input_data
+from actionRecognition import input_data
 import os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
